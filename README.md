@@ -3,11 +3,11 @@ UNIX course final exercise task
 
 Preparing working directories
 
-  mkdir data
+mkdir data
 	
-  mkdir scripts
+mkdir scripts
 	
-  echo 'data*' >> .gitignore
+echo 'data*' >> .gitignore
   
 Copying source data to the new directory "data"
   
