@@ -68,7 +68,6 @@ Continue with plot construction in R Studio
 	read_tsv('luscinia_vars.tsv') -> l
 	
 	read_tsv('luscinia_vars.tsv') %>%
-+     mutate(CHROM = as.factor(CHROM)) ->
-+     l
+	mutate(CHROM = as.factor(CHROM)) -> l
 
 	
