@@ -15,7 +15,7 @@ Copying source data to the new directory "data"
 
 	cd data
   
-	cp home/data-shared/vcf_examples/luscinia_vars.vcf.gz .
+	cp /data-shared/vcf_examples/luscinia_vars.vcf.gz .
 
 Task 1: Distribution of PHRED qualities over the whole genome and by chromosome
 
@@ -33,7 +33,7 @@ Position is in the 2nd column
 
 Quality score is in the 6th column
 
-Wrokflow:
+Workflow:
 
 Storing source data into a variable for easier calling
 
@@ -69,6 +69,9 @@ Continue with plot construction in R Studio
 	
 	read_tsv('luscinia_vars.tsv') %>%
 	mutate(CHROM = as.factor(CHROM)) -> l
+	
+	hodnoty <- table (l$CHROM) #Zobrazí hodnoty ve sloupci chromozom, uloženy jako nová proměnná
+	
 
 	
 	
