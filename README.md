@@ -1,6 +1,20 @@
 # ngs-course
 UNIX course final exercise task
 
+Preparing working directories
+
+	mkdir data
+	
+	mkdir -p plot/plot_data
+	
+	echo 'data*' >> .gitignore
+  
+Copying source data to the new directory "data"
+
+	cd data
+  
+	cp /data-shared/vcf_examples/luscinia_vars.vcf.gz .
+
 Task 1: Distribution of PHRED qualities over the whole genome and by chromosome
 
 Exploring the source data.
