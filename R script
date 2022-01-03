@@ -1,5 +1,7 @@
 setwd('~/ngs-course/plot/plot_data')
 
+###Plot distribution of qualities over the whole genome
+
 read_tsv('luscinia_vars.tsv') -> l
 
 read_tsv('luscinia_vars.tsv') %>%
@@ -50,3 +52,52 @@ ggplot(lm) +
   geom_boxplot(aes(bin, QUAL), outlier.colour = NA, fill = "yellow") +
   geom_smooth(aes(bin, QUAL, group = 1), colour = "blue") +
   theme(axis.text.x = element_text(angle = 40, hjust = 1))
+
+###Plot distribution of qualities over the chromozome (here chr1)
+
+read_tsv('luscinia_vars_Chr1.tsv') -> chr1
+
+read_tsv('luscinia_vars_Chr1.tsv') %>%
+mutate(CHROM = as.factor(CHROM)) -> chr1
+
+c(0:9,
+  seq(14, 50, by = 5),
+  seq(59, 100, by = 10),
+  seq(149, 300, by = 50),
+  seq(400, 1000, by=100),
+  seq(11000, 91000,by = 10000),
+  seq(1091000, 10000000, by = 1000000)) -> breaks
+  
+data.frame(
+    l = breaks %>% head(-1),
+    r = breaks %>% tail(-1)) %>%
+  mutate(
+    diff = r - l,
+    lab = ifelse(diff > 1, paste0(l + 1, "-", r), as.character(r))) ->
+  labs
+  
+data.frame(
+  ymin = c(0, 50, 250),
+  ymax = c(50, 250, 1000),
+  colour=c("red", "orange", "green")) ->
+  quals
+  
+chr1 %>%
+  mutate(bin=cut(POS, breaks, labels = labs$lab)) ->
+  chr1m
+  
+ggplot(chr1m, aes(bin, QUAL)) +
+  geom_boxplot(outlier.colour = NA) +
+  ylim(c(0, 1000))
+  
+ggplot(chr1m) +
+  geom_rect(aes(ymin = ymin, ymax = ymax, fill = colour),
+        xmin = -Inf,
+        xmax = Inf,
+        alpha=0.3,
+        data = quals) +
+  scale_fill_identity() +
+  geom_boxplot(aes(bin, QUAL), outlier.colour = NA, fill = "yellow") +
+  geom_smooth(aes(bin, QUAL, group = 1), colour = "blue") +
+  theme(axis.text.x = element_text(angle = 40, hjust = 1))
+  
