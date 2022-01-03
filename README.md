@@ -53,80 +53,60 @@ Continue with plot construction in R Studio
 	
 	read_tsv('luscinia_vars.tsv') %>%
 	mutate(CHROM = as.factor(CHROM)) -> l
-	
-	hodnoty <- table (l$CHROM) #Zobrazí hodnoty ve sloupci chromozom, uloženy jako nová proměnná
-	
-Jiný postup v R
-
-	l$CHROM %>% unique %>% head(10) -> sel
-	l %>%
-	  filter(CHROM %in% sel) %>%
-	  ggplot(aes(POS, QUAL, colour = CHROM, group = CHROM)) +
-	  geom_line()
+		
 	  
-Creating intervals and labels
+Creating bins and labeles that fit positions in my data
 
 	c(0:9,
 	  seq(14, 50, by = 5),
- 	  seq(59, 100, by = 10),
- 	  seq(149, 300, by = 50),
-	  seq(400, 1000, by=100)) ->
-  	  breaks
+	  seq(59, 100, by = 10),
+	  seq(149, 300, by = 50),
+	  seq(400, 1000, by=100),
+	  seq(11000, 91000,by = 10000),
+	  seq(1091000, 12000000, by = 1000000)) -> breaks
 	  
-data.frame(
-    l = breaks %>% head(-1),
-    r = breaks %>% tail(-1)) %>%
-  mutate(
-    diff = r - l,
-    lab = ifelse(diff > 1, paste0(l + 1, "-", r), as.character(r))) ->
-  labs
+	data.frame(
+	    l = breaks %>% head(-1),
+	    r = breaks %>% tail(-1)) %>%
+	  mutate(
+	    diff = r - l,
+	    lab = ifelse(diff > 1, paste0(l + 1, "-", r), as.character(r))) ->
+	  labs
   
 Adding coloured vertical quality zones
+
 	data.frame(
-    ymin = c(0, 20, 28),
-    ymax = c(20, 28, 40),
-    colour=c("red", "orange", "green")) ->
-  quals
-  
-Creating bins (creates new column with bin placement)
+	  ymin = c(0, 50, 250),
+	  ymax = c(50, 250, 1000),
+	  colour=c("red", "orange", "green")) ->
+	  quals
+
+	
+Creating table with new column containing bin information
 
 	l %>%
-  mutate(bin=cut(POS, breaks, labels = labs$lab)) ->
-  lm
+	  mutate(bin=cut(POS, breaks, labels = labs$lab)) ->
+	  lm
+	  
+Trial plotting of the qualities in the bins
   
 	ggplot(lm, aes(bin, QUAL)) +
-  geom_boxplot(outlier.colour = NA) +
-  ylim(c(0, 45))
+	  geom_boxplot(outlier.colour = NA) +
+	  ylim(c(0, 1000))
+	  
+Final plot containing both boxplots and zones
   
-  ggplot(lm) +
-  geom_rect(aes(ymin = ymin, ymax = ymax, fill = colour),
+	ggplot(lm) +
+	  geom_rect(aes(ymin = ymin, ymax = ymax, fill = colour),
             xmin = -Inf,
             xmax = Inf,
             alpha=0.3,
             data = quals) +
-  scale_fill_identity() +
-  geom_boxplot(aes(bin, QUAL), outlier.colour = NA, fill = "yellow") +
-  geom_smooth(aes(bin, QUAL, group = 1), colour = "blue") +
-  theme(axis.text.x = element_text(angle = 40, hjust = 1))
-  
-  Nový pokus
-  
-  c(0:9,
-+   seq(14, 50, by = 5),
-+   seq(59, 100, by = 10),
-+   seq(149, 300, by = 50),
-+   seq(400, 1000, by=100),
-+   seq(11000, 91000,by = 10000),
-+   seq(1091000, 12000000, by = 1000000)) -> breaks
-
-data.frame(
-+     ymin = c(0, 50, 250),
-+     ymax = c(50, 250, 1000),
-+     colour=c("red", "orange", "green")) ->
-+     quals
-
- ggplot(lm, aes(bin, QUAL)) +
-+     geom_boxplot(outlier.colour = NA) +
-+     ylim(c(0, 1000))
+	  scale_fill_identity() +
+	  geom_boxplot(aes(bin, QUAL), outlier.colour = NA, fill = "yellow") +
+	  geom_smooth(aes(bin, QUAL, group = 1), colour = "blue") +
+	  theme(axis.text.x = element_text(angle = 40, hjust = 1))
+	  
+Distribution of qualities over the genome:
 	
 ![image](https://user-images.githubusercontent.com/95357905/147915986-25394ac4-faa8-4614-8163-37370619936c.png)
