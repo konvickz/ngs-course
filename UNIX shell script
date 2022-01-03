@@ -1,0 +1,23 @@
+#Exploring the source data.
+cd ..
+< data/luscinia_vars.vcf.gz zcat|less -S
+
+#Storing source data into a variable for easier calling
+IN=data/luscinia_vars.vcf.gz
+
+#Subsetting the data
+
+<$IN zcat |cut -f1-2,6|less -S
+<$IN zcat |  cut -f1-2,6  > plot/plot_data/luscinia_vars.vcf
+
+#Storing new dataset into a variable
+IN=plot/plot_data/luscinia_vars.vcf
+
+#Getting rid of comment lines and # in the header
+<$IN grep -v '##' | less -S
+<$IN grep -v '##' | tail -c +2 | less -S
+
+#Storing in tab separated file
+<$IN grep -v '##' | tail -c +2 > plot/plot_data/luscinia_vars.tsv
+
+less -S plot/plot_data/luscinia_vars.tsv
