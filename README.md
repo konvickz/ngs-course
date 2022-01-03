@@ -110,3 +110,72 @@ Final plot containing both boxplots and zones
 Distribution of qualities over the genome:
 	
 ![image](https://user-images.githubusercontent.com/95357905/147915986-25394ac4-faa8-4614-8163-37370619936c.png)
+
+
+Distribution of qualities by chromozome - I demonstrate the whole process on chromozome 1 (Chr1)
+
+First, I filtered only chr1 in Excel and created new tsv. file that I used for processing in R
+The rest is similar to the previous part
+
+R workflow:
+
+	read_tsv('luscinia_vars_Chr1.tsv') -> chr1
+	
+	read_tsv('luscinia_vars_Chr1.tsv') %>%
+	mutate(CHROM = as.factor(CHROM)) -> chr1
+
+Creating bins and labeles that fit positions in my data
+
+	c(0:9,
+	  seq(14, 50, by = 5),
+	  seq(59, 100, by = 10),
+	  seq(149, 300, by = 50),
+	  seq(400, 1000, by=100),
+	  seq(11000, 91000,by = 10000),
+	  seq(1091000, 10000000, by = 1000000)) -> breaks
+	  
+	data.frame(
+	    l = breaks %>% head(-1),
+	    r = breaks %>% tail(-1)) %>%
+	  mutate(
+	    diff = r - l,
+	    lab = ifelse(diff > 1, paste0(l + 1, "-", r), as.character(r))) ->
+	  labs
+  
+Adding coloured vertical quality zones
+
+	data.frame(
+	  ymin = c(0, 50, 250),
+	  ymax = c(50, 250, 1000),
+	  colour=c("red", "orange", "green")) ->
+	  quals
+	
+Creating table with new column containing bin information
+
+	chr1 %>%
+	  mutate(bin=cut(POS, breaks, labels = labs$lab)) ->
+	  chr1m
+	  
+Trial plotting of the qualities in the bins
+  
+	ggplot(chr1m, aes(bin, QUAL)) +
+	  geom_boxplot(outlier.colour = NA) +
+	  ylim(c(0, 1000))
+	  
+Final plot containing both boxplots and zones
+  
+	ggplot(chr1m) +
+	  geom_rect(aes(ymin = ymin, ymax = ymax, fill = colour),
+            xmin = -Inf,
+            xmax = Inf,
+            alpha=0.3,
+            data = quals) +
+	  scale_fill_identity() +
+	  geom_boxplot(aes(bin, QUAL), outlier.colour = NA, fill = "yellow") +
+	  geom_smooth(aes(bin, QUAL, group = 1), colour = "blue") +
+	  theme(axis.text.x = element_text(angle = 40, hjust = 1))
+	  
+Distribution of qualities over the chr1
+	  
+![image](https://user-images.githubusercontent.com/95357905/147924703-45f6e5cc-f759-4d11-a959-9ac64482c43a.png)
+
