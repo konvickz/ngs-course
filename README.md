@@ -56,5 +56,13 @@ Continue with plot construction in R Studio
 	
 	hodnoty <- table (l$CHROM) #Zobrazí hodnoty ve sloupci chromozom, uloženy jako nová proměnná
 	
+Jiný postup v R
+
+	l$CHROM %>% unique %>% head(10) -> sel
+	l %>%
+		filter(CHROM %in% sel) %>%
+		ggplot(aes(POS, QUAL, colour = CHROM, group = CHROM)) +
+		geom_line()
+	
 
 	
