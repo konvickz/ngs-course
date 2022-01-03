@@ -1,3 +1,12 @@
+#Preparing working directories
+	mkdir data	
+	mkdir -p plot/plot_data	
+	echo 'data*' >> .gitignore
+  
+#Copying source data to the new directory "data"
+	cd data
+  cp /data-shared/vcf_examples/luscinia_vars.vcf.gz .
+
 #Exploring the source data.
 cd ..
 < data/luscinia_vars.vcf.gz zcat|less -S
