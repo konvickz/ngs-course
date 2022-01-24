@@ -117,7 +117,7 @@ Final plot containing both boxplots and zones
 	  
 Distribution of qualities over the genome:
 
-![genome- plot](https://user-images.githubusercontent.com/95357905/150777245-232a797a-d91b-479c-9847-d88fdbd1af12.png)
+![genome_plot](https://user-images.githubusercontent.com/95357905/150777515-bdf2c5b4-f00e-48f4-956a-1d8a6455b8dd.png)
 
 
 Distribution of qualities by chromozome - I demonstrate the whole process on chromozome 1 (Chr1)
