@@ -71,13 +71,7 @@ Continue with plot construction in R Studio
 	  
 Creating bins and labeles that fit positions in my data
 
-	c(0:9,
-	  seq(14, 50, by = 5),
-	  seq(59, 100, by = 10),
-	  seq(149, 300, by = 50),
-	  seq(400, 1000, by=100),
-	  seq(11000, 91000,by = 10000),
-	  seq(1091000, 12000000, by = 1000000)) -> breaks
+	c(seq(0, 12000000, by=200000)) -> breaks
 	  
 	data.frame(
 	    l = breaks %>% head(-1),
@@ -122,8 +116,8 @@ Final plot containing both boxplots and zones
 	  theme(axis.text.x = element_text(angle = 40, hjust = 1))
 	  
 Distribution of qualities over the genome:
-	
-![image](https://user-images.githubusercontent.com/95357905/147915986-25394ac4-faa8-4614-8163-37370619936c.png)
+
+![genome- plot](https://user-images.githubusercontent.com/95357905/150777245-232a797a-d91b-479c-9847-d88fdbd1af12.png)
 
 
 Distribution of qualities by chromozome - I demonstrate the whole process on chromozome 1 (Chr1)
