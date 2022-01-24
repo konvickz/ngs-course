@@ -8,13 +8,7 @@ read_tsv('luscinia_vars.tsv') %>%
 mutate(CHROM = as.factor(CHROM)) -> l
 
 #Creating bins and labeles that fit positions in my data
-c(0:9,
-  seq(14, 50, by = 5),
-  seq(59, 100, by = 10),
-  seq(149, 300, by = 50),
-  seq(400, 1000, by=100),
-  seq(11000, 91000,by = 10000),
-  seq(1091000, 12000000, by = 1000000)) -> breaks
+c(seq(0, 12000000, by=200000)) -> breaks
   
 data.frame(
     l = breaks %>% head(-1),
@@ -55,18 +49,10 @@ ggplot(lm) +
 
 ###Plot distribution of qualities over the chromozome (here chr1)
 
-read_tsv('luscinia_vars_Chr1.tsv') -> chr1
+read_tsv('luscinia_vars_chr1.tsv',header=FALSE) -> chr1
+names(chr1) <- c("CHROM","POS","QUAL")
 
-read_tsv('luscinia_vars_Chr1.tsv') %>%
-mutate(CHROM = as.factor(CHROM)) -> chr1
-
-c(0:9,
-  seq(14, 50, by = 5),
-  seq(59, 100, by = 10),
-  seq(149, 300, by = 50),
-  seq(400, 1000, by=100),
-  seq(11000, 91000,by = 10000),
-  seq(1091000, 10000000, by = 1000000)) -> breaks
+c(seq(0, 11000000, by=200000)) -> breaks
   
 data.frame(
     l = breaks %>% head(-1),
