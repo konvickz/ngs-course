@@ -128,25 +128,21 @@ Distribution of qualities over the genome:
 
 Distribution of qualities by chromozome - I demonstrate the whole process on chromozome 1 (Chr1)
 
-First, I filtered only chr1 in Excel and created new tsv. file that I used for processing in R
-The rest is similar to the previous part
+While subsetting the data in UNIX, I chose only chromozome 1 and stored it in separate tsv file:
+
+	<$IN grep -E $'^chr1\t'| less -S
+	<$IN grep -E $'^chr1\t' > plot/plot_data/luscinia_vars_chr1.tsv
+	
+The rest is similar to the previous part.
 
 R workflow:
 
-	read_tsv('luscinia_vars_Chr1.tsv') -> chr1
-	
-	read_tsv('luscinia_vars_Chr1.tsv') %>%
-	mutate(CHROM = as.factor(CHROM)) -> chr1
+	read_tsv('luscinia_vars_chr1.tsv',header=FALSE) -> chr1
+	names(chr1) <- c("CHROM","POS","QUAL")
 
 Creating bins and labeles that fit positions in my data
 
-	c(0:9,
-	  seq(14, 50, by = 5),
-	  seq(59, 100, by = 10),
-	  seq(149, 300, by = 50),
-	  seq(400, 1000, by=100),
-	  seq(11000, 91000,by = 10000),
-	  seq(1091000, 10000000, by = 1000000)) -> breaks
+	c(seq(0, 11000000, by=200000)) -> breaks
 	  
 	data.frame(
 	    l = breaks %>% head(-1),
@@ -191,5 +187,5 @@ Final plot containing both boxplots and zones
 	  
 Distribution of qualities over the chr1
 	  
-![image](https://user-images.githubusercontent.com/95357905/147924703-45f6e5cc-f759-4d11-a959-9ac64482c43a.png)
+![chr1_plot](https://user-images.githubusercontent.com/95357905/150776227-263020aa-b954-4d09-ad70-dbbfe0bd6003.png)
 
