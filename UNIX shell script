@@ -30,3 +30,7 @@ IN=plot/plot_data/luscinia_vars.vcf
 <$IN grep -v '##' | tail -c +2 > plot/plot_data/luscinia_vars.tsv
 
 less -S plot/plot_data/luscinia_vars.tsv
+
+#Subsetting the data for a chromozome (chromozome 1 as an example)
+<$IN grep -E $'^chr1\t'| less -S
+<$IN grep -E $'^chr1\t' > plot/plot_data/luscinia_vars_chr1.tsv
